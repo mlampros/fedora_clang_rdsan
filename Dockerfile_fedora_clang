@@ -1,0 +1,9 @@
+# slight modification of https://github.com/r-hub/rhub-linux-builders/tree/master/fedora-clang
+
+FROM mlampros/fedorar:latest
+
+RUN dnf update -y
+RUN dnf install -y \
+	llvm \
+	clang \
+	compiler-rt
