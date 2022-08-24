@@ -1,0 +1,83 @@
+
+# run the workflow once per week
+
+on:
+  schedule:
+    - cron: "0 0 * * 0"
+  push:
+    branches: master
+
+
+name: docker-image-fedora-r-clang-asan
+
+
+jobs:
+  fedora_asan_ubsan:
+    name: create-docker-image
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: r-lib/actions/setup-r@v1
+      - name: Latest Version of Fedora as Environment Variable using an R-script
+        working-directory: ${{ github.workspace }}
+        run: |
+          sudo apt install -y libcurl4-openssl-dev
+          Rscript -e 'install.packages(c("jsonlite", "curl"), repos = "https://cloud.r-project.org/")'
+          echo "FEDORA_VERS=$(Rscript fedora_latest_version.R)" >> $GITHUB_ENV
+      - name: Print the Fedora Version (to download the corresponding docker image)
+        run: echo "Fedora ${{ env.FEDORA_VERS }}"
+      - name: Login to Docker Hub
+        uses: docker/login-action@v2
+        with:
+          username: ${{ github.repository_owner }}
+          password: ${{ secrets.DOCKER_PASSWORD }}
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v1
+
+      - name: Build and Upload the Fedora Image
+        uses: docker/build-push-action@v2
+        with:
+          context: ./
+          build-args: FEDORA_VERSION=${{ env.FEDORA_VERS }}
+          file: ./Dockerfile_fedora
+          builder: ${{ steps.buildx.outputs.name }}
+          push: true
+          tags: ${{ github.repository_owner }}/fedorar:latest
+          cache-from: type=registry,ref=${{ github.repository_owner }}/fedorar:buildcache
+          cache-to: type=registry,ref=${{ github.repository_owner }}/fedorar:buildcache,mode=max
+
+      - name: free disk space (installation from source of LLVM and Clang might require disk space)
+        run: |
+          df -h
+          echo '----------------------------------------------------'
+          sudo swapoff -a
+          sudo rm -f /swapfile
+          sudo rm -rf /opt || true
+          sudo apt -y autoremove
+          sudo apt -y clean
+          docker image prune --filter dangling=true
+          echo '----------------------------------------------------'
+          df -h
+
+      - name: Build and Upload the Fedora-LLVM-Clang Image
+        uses: docker/build-push-action@v2
+        with:
+          context: ./
+          file: ./Dockerfile_fedora_clang
+          builder: ${{ steps.buildx.outputs.name }}
+          push: true
+          tags: ${{ github.repository_owner }}/fedora_clang:latest
+          cache-from: type=registry,ref=${{ github.repository_owner }}/fedora_clang:buildcache
+          cache-to: type=registry,ref=${{ github.repository_owner }}/fedora_clang:buildcache,mode=max
+
+      - name: Build and Upload the Fedora-Clang-San Image
+        uses: docker/build-push-action@v2
+        with:
+          context: ./
+          file: ./Dockerfile_fedora_clang_san
+          builder: ${{ steps.buildx.outputs.name }}
+          push: true
+          tags: ${{ github.repository_owner }}/fedora_clang_san:latest
+          cache-from: type=registry,ref=${{ github.repository_owner }}/fedora_clang_san:buildcache
+          cache-to: type=registry,ref=${{ github.repository_owner }}/fedora_clang_san:buildcache,mode=max
