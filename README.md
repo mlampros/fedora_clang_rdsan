@@ -1,4 +1,7 @@
 
+[![](https://img.shields.io/docker/automated/mlampros/fedora_clang_san.svg)](https://hub.docker.com/r/mlampros/fedora_clang_san)
+
+
 ## **fedora_clang_rdsan**
 
 <br>
