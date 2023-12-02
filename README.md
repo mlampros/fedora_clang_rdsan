@@ -6,6 +6,10 @@
 
 <br>
 
+**updated: 2023-12-02**: I modified the [Dockerfile_fedora_clang](https://github.com/mlampros/fedora_clang_rdsan/blob/master/Dockerfile_fedora_clang) file so that the latest clang version is installed
+
+<br>
+
 * This repository includes slight modifications of the [Dockerfiles from the rhub project](https://github.com/r-hub/rhub-linux-builders) to reproduce CRAN ASAN-UBSAN errors on Fedora Clang (latest version) using a [Github Action](https://github.com/mlampros/fedora_clang_rdsan/blob/master/.github/workflows/gh_action.yml)
 * In the Github Action an [.R file](https://github.com/mlampros/fedora_clang_rdsan/blob/master/fedora_latest_version.R) is used to retrieve the latest version of the existing [Fedora Docker images](https://hub.docker.com/v2/repositories/library/fedora/tags) using the Docker API. Then, the highest numeric version (and not a character string such as "latest") will be used to build the Docker Image and check for potential CRAN ASAN-UBSAN Errors.
 * Finally a [docker image is pushed to my Docker Account](https://hub.docker.com/repository/docker/mlampros/fedora_clang_san) that can be used to fix potential CRAN ASAN-UBSAN errors.
