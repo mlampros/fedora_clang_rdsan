@@ -8,9 +8,9 @@ RUN dnf update -y
 # https://discussion.fedoraproject.org/t/fedora-llvm-team-llvm-snapshots-big-merge-20231202/97999
 # https://github.com/kwk/llvm-daily-fedora-rpms
 
-RUN dnf install -y 'dnf-command(copr)'
-RUN dnf-4 copr enable -y @fedora-llvm-team/llvm-snapshots
-RUN dnf install -y \
+RUN dnf5 install -y 'dnf5-command(copr)'
+RUN dnf5 copr enable -y @fedora-llvm-team/llvm-snapshots
+RUN dnf5 install -y \
 	llvm \
 	clang \
 	compiler-rt
