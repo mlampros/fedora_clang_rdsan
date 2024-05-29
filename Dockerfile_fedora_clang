@@ -9,7 +9,7 @@ RUN dnf update -y
 # https://github.com/kwk/llvm-daily-fedora-rpms
 
 RUN dnf install -y 'dnf-command(copr)'
-RUN dnf copr enable -y @fedora-llvm-team/llvm-snapshots
+RUN dnf-4 copr enable -y @fedora-llvm-team/llvm-snapshots
 RUN dnf install -y \
 	llvm \
 	clang \
