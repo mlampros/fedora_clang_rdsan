@@ -15,7 +15,6 @@ RUN dnf -y update && dnf -y install shadow-utils
 
 ## Set a default user. Available via runtime flag
 RUN useradd docker
-USER docker
 
 RUN dnf update -y
 RUN dnf install -y \
