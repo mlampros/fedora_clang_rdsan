@@ -1,6 +1,9 @@
 # slight modification of https://github.com/r-hub/rhub-linux-builders/tree/master/fedora
 
-ARG FEDORA_VERSION
+# include a default value to avoid "InvalidDefaultArgInFrom" warning (ref. https://docs.docker.com/reference/build-checks/invalid-default-arg-in-from/)
+ARG FEDORA_VERSION=40
+
+RUN echo "$FEDORA_VERSION"
 
 FROM fedora:$FEDORA_VERSION
 
@@ -9,6 +12,7 @@ COPY checkbashisms /usr/local/bin
 
 ## Set a default user. Available via runtime flag
 RUN useradd docker
+USER docker
 
 RUN dnf update -y
 RUN dnf install -y \

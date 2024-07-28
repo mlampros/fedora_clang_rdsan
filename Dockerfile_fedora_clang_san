@@ -2,19 +2,19 @@
 
 FROM mlampros/fedora_clang:latest
 
-ENV CRAN http://cran.r-project.org
+ENV CRAN=http://cran.r-project.org
 
 RUN cd /tmp \
     && svn co https://svn.r-project.org/R/trunk R-devel
 
-ENV RPREFIX /opt/R-devel
+ENV RPREFIX=/opt/R-devel
 
-ENV ROPTIONS --with-x --with-recommended-packages --enable-R-shlib --enable-R-static-lib
+ENV ROPTIONS="--with-x --with-recommended-packages --enable-R-shlib --enable-R-static-lib"
 
-ENV CC /usr/bin/clang
-ENV CXX /usr/bin/clang++
-ENV F77 gfortran
-ENV CPP cpp
+ENV CC=/usr/bin/clang
+ENV CXX=/usr/bin/clang++
+ENV F77=gfortran
+ENV CPP=cpp
 
 RUN yum -y install rsync
 RUN dnf install -y libcxx-devel
@@ -38,7 +38,7 @@ RUN cd /tmp/R-devel \
 
 # More verbose UBSAN/SAN output (cf #3) -- this is still somewhat speculative
 # Entry copied from Prof Ripley's setup described at http://www.stats.ox.ac.uk/pub/bdr/memtests/README.txt
-ENV ASAN_OPTIONS 'alloc_dealloc_mismatch=0:detect_leaks=0:detect_odr_violation=0'
+ENV ASAN_OPTIONS='alloc_dealloc_mismatch=0:detect_leaks=0:detect_odr_violation=0'
 
 ENV PATH=${RPREFIX}/bin:$PATH
 
