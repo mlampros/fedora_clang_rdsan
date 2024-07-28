@@ -10,6 +10,9 @@ RUN echo "$FEDORA_VERSION"
 ## Copy 'checkbashisms' (as a local copy from devscripts package)
 COPY checkbashisms /usr/local/bin
 
+# Install shadow-utils to ensure useradd is available
+RUN dnf -y update && dnf -y install shadow-utils
+
 ## Set a default user. Available via runtime flag
 RUN useradd docker
 USER docker
