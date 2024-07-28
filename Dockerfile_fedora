@@ -3,9 +3,9 @@
 # include a default value to avoid "InvalidDefaultArgInFrom" warning (ref. https://docs.docker.com/reference/build-checks/invalid-default-arg-in-from/)
 ARG FEDORA_VERSION=40
 
-RUN echo "$FEDORA_VERSION"
-
 FROM fedora:$FEDORA_VERSION
+
+RUN echo "$FEDORA_VERSION"
 
 ## Copy 'checkbashisms' (as a local copy from devscripts package)
 COPY checkbashisms /usr/local/bin
