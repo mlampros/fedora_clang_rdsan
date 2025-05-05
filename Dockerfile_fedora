@@ -50,7 +50,8 @@ RUN dnf install -y \
     libpng-devel \
     readline-devel \
     zlib-devel \
-    xz-devel
+    xz-devel \
+    libtirpc-devel
 
 # Development libraries - part 2
 RUN dnf install -y \
