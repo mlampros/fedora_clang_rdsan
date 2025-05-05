@@ -35,7 +35,8 @@ RUN dnf install -y \
     tar \
     which \
     file \
-    unzip
+    unzip \
+    gawk
 
 # Java
 RUN dnf install -y java-1.8.0-openjdk || echo "Java 1.8 not available, trying newer version" && \
