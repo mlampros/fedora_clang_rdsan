@@ -6,7 +6,8 @@
 
 <br>
 
-**updated: 2023-12-02**: I modified the [Dockerfile_fedora_clang](https://github.com/mlampros/fedora_clang_rdsan/blob/master/Dockerfile_fedora_clang) file so that the latest clang version is installed
+- **2025-05-05**: I modified the [Dockerfile_fedora](https://github.com/mlampros/fedora_clang_rdsan/blob/master/Dockerfile_fedora) file (split the commands into multiple groups) to fix an error.
+- **2023-12-02**: I modified the [Dockerfile_fedora_clang](https://github.com/mlampros/fedora_clang_rdsan/blob/master/Dockerfile_fedora_clang) file so that the latest clang version is installed.
 
 <br>
 
