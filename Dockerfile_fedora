@@ -17,61 +17,86 @@ RUN dnf -y update && dnf -y install shadow-utils
 RUN useradd docker
 
 RUN dnf update -y
+
+# Enable all repositories and clean dnf cache
+RUN dnf install -y dnf-plugins-core && \
+    dnf clean all && \
+    dnf makecache
+
+# Install packages in smaller groups to identify problematic ones
+# Basic tools group
 RUN dnf install -y \
-	gcc-gfortran \
-	less \
-	ca-certificates \
-	curl \
-	java-1.8.0-openjdk \
-	bzip2-devel \
-	cairo-devel \
-	ghostscript \
-	libcurl-devel \
-	libicu-devel \
-	libjpeg-turbo-devel \
-	pango-devel \
-	pcre-devel \
-	libpng-devel \
-	readline-devel \
-	libtiff-devel \
-	libX11-devel \
-	libXt-devel \
-	subversion \
-	tcl-devel \
-	texinfo \
-	texlive-latex \
-	texlive-collection-fontsextra \
-	texlive-scheme-basic \
-	tk-devel \
-	unzip \
-	xorg-x11-proto-devel \
-	findutils \
-	make \
-	texinfo-tex \
-	xz-devel \
-	zlib-devel \
-	libXmu-devel \
-	tar \
-	texlive-ec \
-	texlive-parskip \
-	texlive-collection-fontsrecommended \
-	which \
-	xorg-x11-server-Xvfb
+    gcc-gfortran \
+    less \
+    ca-certificates \
+    curl \
+    findutils \
+    make \
+    tar \
+    which \
+    file \
+    unzip
 
+# Java
+RUN dnf install -y java-1.8.0-openjdk || echo "Java 1.8 not available, trying newer version" && \
+    dnf install -y java-latest-openjdk
+
+# Development libraries - part 1
 RUN dnf install -y \
-	dnf-plugins-core
+    bzip2-devel \
+    libcurl-devel \
+    libicu-devel \
+    pcre-devel \
+    libpng-devel \
+    readline-devel \
+    zlib-devel \
+    xz-devel
 
-RUN dnf install -y glibc-langpack-en.x86_64
+# Development libraries - part 2
+RUN dnf install -y \
+    cairo-devel \
+    libjpeg-turbo-devel \
+    pango-devel \
+    libtiff-devel \
+    libX11-devel \
+    libXt-devel \
+    libXmu-devel
 
-RUN dnf install -y valgrind
+# Version control and dev tools
+RUN dnf install -y \
+    subversion \
+    tcl-devel \
+    tk-devel \
+    ghostscript \
+    xorg-x11-proto-devel
 
-RUN dnf install -y qpdf
+# TeX packages
+RUN dnf install -y \
+    texinfo \
+    texinfo-tex \
+    texlive-latex || echo "Package not found, trying alternatives" && \
+    dnf install -y texlive-scheme-basic
 
-RUN dnf install -y aspell aspell-en
+# Additional TeX packages - try each separately
+RUN dnf install -y texlive-collection-fontsextra || echo "texlive-collection-fontsextra not available"
+RUN dnf install -y texlive-scheme-basic || echo "texlive-scheme-basic not available"
+RUN dnf install -y texlive-ec || echo "texlive-ec not available"
+RUN dnf install -y texlive-parskip || echo "texlive-parskip not available"
+RUN dnf install -y texlive-collection-fontsrecommended || echo "texlive-collection-fontsrecommended not available"
 
-RUN dnf install -y file
+# X11 related
+RUN dnf install -y \
+    xorg-x11-server-Xvfb \
+    xorg-x11-fonts-100dpi \
+    xorg-x11-fonts-75dpi || echo "Some X11 packages might not be available"
 
-RUN dnf install -y xorg-x11-fonts-100dpi xorg-x11-fonts-75dpi
+# Additional tools
+RUN dnf install -y \
+    glibc-langpack-en.x86_64 \
+    valgrind \
+    qpdf \
+    aspell \
+    aspell-en
 
 RUN dnf update -y
 
